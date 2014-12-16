@@ -5,16 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import moznion.net.mysql.namelocker.exception.AlreadyLockedException;
+import moznion.net.mysql.namelocker.exception.CannotObtainLockException;
+import moznion.net.mysql.namelocker.exception.UnknownGetLockStatusException;
+
 /**
- * Manager of named lock for MySQL.
+ * MySQL name based locker.
  * 
  * @author moznion
+ * 
  */
-public class NameLockManager implements AutoCloseable {
+public class NameLocker implements AutoCloseable {
   private Connection connection;
   private String lockName;
 
-  public NameLockManager(Connection connection, String lockName) {
+  public NameLocker(Connection connection, String lockName) throws SQLException,
+      CannotObtainLockException, AlreadyLockedException {
+    this(connection, lockName, 0);
+  }
+
+  public NameLocker(Connection connection, String lockName, int timeout) throws SQLException,
+      CannotObtainLockException, AlreadyLockedException {
     if (connection == null) {
       throw new IllegalArgumentException("`connection` must not be null");
     }
@@ -29,13 +40,7 @@ public class NameLockManager implements AutoCloseable {
 
     this.connection = connection;
     this.lockName = lockName;
-  }
 
-  public LockStatus getLock() throws SQLException {
-    return getLock(0);
-  }
-
-  public LockStatus getLock(int timeout) throws SQLException {
     try (PreparedStatement sth = connection.prepareStatement("SELECT GET_LOCK(?, ?)")) {
       sth.setString(1, lockName);
       sth.setInt(2, timeout);
@@ -45,18 +50,17 @@ public class NameLockManager implements AutoCloseable {
       Integer status = resultSet.getInt(1);
 
       if (resultSet.wasNull()) {
-        return LockStatus.ERROR;
+        throw new CannotObtainLockException();
       }
 
-      switch (status) {
-        case 0:
-          return LockStatus.FAILURE;
-        case 1:
-          return LockStatus.SUCCESS;
+      if (status == 0) {
+        throw new AlreadyLockedException(this.lockName);
       }
 
-      // Probably here is unreachable
-      return LockStatus.NA;
+      if (status != 1) {
+        // Probably here is unreachable
+        throw new UnknownGetLockStatusException(status);
+      }
     }
   }
 
