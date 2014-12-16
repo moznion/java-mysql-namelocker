@@ -9,17 +9,13 @@ Synopsis
 ```java
 import java.sql.Connection;
 import java.sql.DriverManager;
-import moznion.net.mysql.namelocker.NameLockManager;
-import moznion.net.mysql.namelocker.LockStatus;
+import moznion.net.mysql.namelocker.NameLocker;
 
 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/table_name", "", "");
-try (NameLockManager manager = new NameLockManager(connection, "lock-lock")) {
-    LockStatus status = manager.getLock(10);
-
+try (NameLocker locker = new NameLocker(connection, "lock-name", 10)) {
     /*
      * do something here
      */
-
 } // lock will be released automatically when it escapes this scope
 ```
 
@@ -31,7 +27,7 @@ This package is port of [Mysql::NameLocker](https://metacpan.org/pod/Mysql::Name
 Note
 --
 
-Obtained lock will be release automatically when it escapes scope of try-with-resources, because `NameLockManager` implements `AutoCloseable`.
+Obtained lock will be release automatically when it escapes scope of try-with-resources, because `Locker` implements `AutoCloseable`.
 
 See Also
 --
