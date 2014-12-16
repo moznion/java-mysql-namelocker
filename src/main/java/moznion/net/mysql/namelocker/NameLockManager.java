@@ -10,11 +10,11 @@ import java.sql.SQLException;
  * 
  * @author moznion
  */
-public class NameLockerManager implements AutoCloseable {
+public class NameLockManager implements AutoCloseable {
   private Connection connection;
   private String lockName;
 
-  public NameLockerManager(Connection connection, String lockName) {
+  public NameLockManager(Connection connection, String lockName) {
     if (connection == null) {
       throw new IllegalArgumentException("`connection` must not be null");
     }
