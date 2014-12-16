@@ -27,7 +27,7 @@ This package is port of [Mysql::NameLocker](https://metacpan.org/pod/Mysql::Name
 Note
 --
 
-Obtained lock will be release automatically when it escapes scope of try-with-resources, because `Locker` implements `AutoCloseable`.
+Obtained lock will be release automatically when it escapes scope of try-with-resources, because `NameLocker` implements `AutoCloseable`.
 
 See Also
 --
