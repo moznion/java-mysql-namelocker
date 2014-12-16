@@ -1,7 +1,7 @@
 mysql-namelocker
 ==
 
-Provides name based lock for MySQL. It based on Java 7 or later.
+Provides MySQL name based lock for Java 7 or later.
 
 Synopsis
 --
