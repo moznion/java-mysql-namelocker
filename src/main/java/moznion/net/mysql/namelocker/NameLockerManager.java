@@ -31,11 +31,11 @@ public class NameLockerManager implements AutoCloseable {
     this.lockName = lockName;
   }
 
-  public Integer getLock() throws SQLException {
+  public LockStatus getLock() throws SQLException {
     return getLock(0);
   }
 
-  public Integer getLock(int timeout) throws SQLException {
+  public LockStatus getLock(int timeout) throws SQLException {
     try (PreparedStatement sth = connection.prepareStatement("SELECT GET_LOCK(?, ?)")) {
       sth.setString(1, lockName);
       sth.setInt(2, timeout);
@@ -43,23 +43,35 @@ public class NameLockerManager implements AutoCloseable {
       ResultSet resultSet = sth.executeQuery();
       resultSet.next();
       Integer status = resultSet.getInt(1);
+
       if (resultSet.wasNull()) {
-        return null;
+        return LockStatus.ERROR;
       }
 
-      return status;
+      switch (status) {
+        case 0:
+          return LockStatus.FAILURE;
+        case 1:
+          return LockStatus.SUCCESS;
+      }
+
+      // Probably here is unreachable
+      return LockStatus.NA;
     }
   }
 
   @Override
   public void close() throws Exception {
     if (connection.isClosed()) {
+      // Connection has been already closed, so lock has also been released.
+      // Therefore here is nothing to do.
       return;
     }
 
-    PreparedStatement sth = connection.prepareStatement("SELECT RELEASE_LOCK(?)");
-    sth.setString(1, lockName);
-    sth.executeQuery();
-    sth.close();
+    // Release lock
+    try (PreparedStatement sth = connection.prepareStatement("SELECT RELEASE_LOCK(?)")) {
+      sth.setString(1, lockName);
+      sth.executeQuery();
+    }
   }
 }
