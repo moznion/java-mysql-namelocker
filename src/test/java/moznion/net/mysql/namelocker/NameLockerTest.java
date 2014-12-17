@@ -95,6 +95,24 @@ public class NameLockerTest {
   }
 
   @Test
+  public void shouldGetLockSuccessfullyWithTimeout() {
+    try (Connection connection =
+        DriverManager.getConnection(
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            "root", "")) {
+      try (NameLocker locker = new NameLocker(connection, "Lock Star", 10)) {
+        // do something
+      } catch (Exception e) {
+        fail("Catch unexpected exception");
+      }
+      assertTrue("Get lock successfully", true);
+    } catch (SQLException e1) {
+      assumeTrue("MySQL may not be upped", false);
+      return;
+    }
+  }
+
+  @Test
   public void shouldBlockLockingSuccessfully() {
     try (Connection conn1 =
         DriverManager.getConnection(
@@ -151,5 +169,31 @@ public class NameLockerTest {
     }
 
     assertTrue("Release resource successfully", true);
+  }
+
+  @Test
+  public void argumentConstraintIsWorkingRightly() throws SQLException {
+    try (NameLocker locker = new NameLocker(null, "Lock Star")) {
+      // do something
+      fail();
+    } catch (IllegalArgumentException iae) {
+      assertTrue(true);
+    } catch (Exception e) {
+      fail();
+    }
+
+    try (Connection conn =
+        DriverManager.getConnection(
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            "root", "")) {
+      try (NameLocker locker = new NameLocker(conn, null)) {
+        // do something
+        fail();
+      } catch (IllegalArgumentException iae) {
+        assertTrue(true);
+      } catch (Exception e) {
+        fail();
+      }
+    }
   }
 }
