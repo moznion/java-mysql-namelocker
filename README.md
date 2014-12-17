@@ -1,4 +1,4 @@
-mysql-namelocker
+mysql-namelocker [![Build Status](https://travis-ci.org/moznion/java-mysql-namelocker.svg)](https://travis-ci.org/moznion/java-mysql-namelocker)
 ==
 
 Provides MySQL name based lock for Java 7 or later.
