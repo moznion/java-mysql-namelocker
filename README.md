@@ -1,7 +1,7 @@
 mysql-namelocker [![Build Status](https://travis-ci.org/moznion/java-mysql-namelocker.svg)](https://travis-ci.org/moznion/java-mysql-namelocker)
 ==
 
-Provides MySQL name based lock for Java 7 or later.
+Provides the safe way of locking and unlocking MySQL tables using named locks for Java 7 or later.
 
 Synopsis
 --
@@ -14,6 +14,7 @@ import moznion.net.mysql.namelocker.NameLocker;
 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/table_name", "", "");
 try (NameLocker locker = new NameLocker(connection, "lock-name", 10)) {
     /*
+     * getting named lock
      * do something here
      */
 } // lock will be released automatically when it escapes this scope
@@ -22,17 +23,21 @@ try (NameLocker locker = new NameLocker(connection, "lock-name", 10)) {
 Description
 --
 
+mysql-namelocker provides safely MySQL named locks.
+
+A locks is created when you instantiate (it uses [GET\_LOCK(str, timeout)](http://dev.mysql.com/doc/refman/5.6/en/miscellaneous-functions.html#function_get-lock)) and it is automatically released (it uses [RELEASE\_LOCK(str)](http://dev.mysql.com/doc/refman/5.6/en/miscellaneous-functions.html#function_release-lock)) when it leaves try-with-resources statement because `NameLocker` implements `AutoCloseable`.
+
 This package is port of [Mysql::NameLocker](https://metacpan.org/pod/Mysql::NameLocker) from Perl to Java.
-
-Note
---
-
-Obtained lock will be release automatically when it escapes scope of try-with-resources, because `NameLocker` implements `AutoCloseable`.
 
 See Also
 --
 
 - [Mysql::NameLocker](https://metacpan.org/pod/Mysql::NameLocker)
+
+Author
+--
+
+moznion (<moznion@gmail.com>)
 
 License
 --
