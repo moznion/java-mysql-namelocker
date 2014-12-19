@@ -9,8 +9,13 @@ package moznion.net.mysql.namelocker.exception;
 public class UnknownGetLockStatusException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
-  public UnknownGetLockStatusException(int responseCode) {
+  /**
+   * Generate exception.
+   * 
+   * @param statusCode status code
+   */
+  public UnknownGetLockStatusException(int statusCode) {
     super(new StringBuilder().append("`SELECT GET_LOCK()` returns the unknown status code (code: ")
-        .append(responseCode).append(")").toString());
+        .append(statusCode).append(")").toString());
   }
 }

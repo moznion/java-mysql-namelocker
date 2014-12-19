@@ -1,16 +1,16 @@
 package moznion.net.mysql.namelocker;
 
+import moznion.net.mysql.namelocker.exception.AlreadyLockedException;
+import moznion.net.mysql.namelocker.exception.CannotObtainLockException;
+import moznion.net.mysql.namelocker.exception.UnknownGetLockStatusException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import moznion.net.mysql.namelocker.exception.AlreadyLockedException;
-import moznion.net.mysql.namelocker.exception.CannotObtainLockException;
-import moznion.net.mysql.namelocker.exception.UnknownGetLockStatusException;
-
 /**
- * MySQL name based locker.
+ * MySQL named locker.
  * 
  * @author moznion
  * 
@@ -19,11 +19,34 @@ public class NameLocker implements AutoCloseable {
   private Connection connection;
   private String lockName;
 
+  /**
+   * Get a named lock.
+   * 
+   * <p>
+   * This method does not wait for a timeout when getting a lock.
+   * </p>
+   * 
+   * @param connection MySQL connection
+   * @param lockName Name of lock
+   * @throws SQLException SQL is something wrong
+   * @throws CannotObtainLockException Cannot obtain a lock by something error of MySQL
+   * @throws AlreadyLockedException A lock has already taken by other client
+   */
   public NameLocker(Connection connection, String lockName) throws SQLException,
       CannotObtainLockException, AlreadyLockedException {
     this(connection, lockName, 0);
   }
 
+  /**
+   * Get a named lock.
+   * 
+   * @param connection MySQL connection
+   * @param lockName Name of lock
+   * @param timeout Seconds for timeout
+   * @throws SQLException SQL is something wrong
+   * @throws CannotObtainLockException Cannot obtain a lock by something error of MySQL
+   * @throws AlreadyLockedException A lock has already taken by other client
+   */
   public NameLocker(Connection connection, String lockName, int timeout) throws SQLException,
       CannotObtainLockException, AlreadyLockedException {
     if (connection == null) {
