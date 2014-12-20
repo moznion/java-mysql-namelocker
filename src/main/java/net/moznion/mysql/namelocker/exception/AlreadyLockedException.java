@@ -1,4 +1,4 @@
-package moznion.net.mysql.namelocker.exception;
+package net.moznion.mysql.namelocker.exception;
 
 /**
  * Exception which occurs when it has been already locked by specified name by other client.

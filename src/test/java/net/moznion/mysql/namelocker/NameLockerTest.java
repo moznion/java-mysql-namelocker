@@ -1,9 +1,10 @@
-package moznion.net.mysql.namelocker;
+package net.moznion.mysql.namelocker;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
-import moznion.net.mysql.namelocker.exception.AlreadyLockedException;
+import net.moznion.mysql.namelocker.NameLocker;
+import net.moznion.mysql.namelocker.exception.AlreadyLockedException;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.AfterClass;

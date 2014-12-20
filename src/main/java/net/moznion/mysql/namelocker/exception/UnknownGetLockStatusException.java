@@ -1,4 +1,4 @@
-package moznion.net.mysql.namelocker.exception;
+package net.moznion.mysql.namelocker.exception;
 
 /**
  * Exception which occurs when `SELECT GET_LOCK()` returns the unknown status code.

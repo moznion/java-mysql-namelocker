@@ -1,8 +1,8 @@
-package moznion.net.mysql.namelocker;
+package net.moznion.mysql.namelocker;
 
-import moznion.net.mysql.namelocker.exception.AlreadyLockedException;
-import moznion.net.mysql.namelocker.exception.CannotObtainLockException;
-import moznion.net.mysql.namelocker.exception.UnknownGetLockStatusException;
+import net.moznion.mysql.namelocker.exception.AlreadyLockedException;
+import net.moznion.mysql.namelocker.exception.CannotObtainLockException;
+import net.moznion.mysql.namelocker.exception.UnknownGetLockStatusException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

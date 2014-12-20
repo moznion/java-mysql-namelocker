@@ -9,7 +9,7 @@ Synopsis
 ```java
 import java.sql.Connection;
 import java.sql.DriverManager;
-import moznion.net.mysql.namelocker.NameLocker;
+import net.moznion.mysql.namelocker.NameLocker;
 
 Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/table_name", "", "");
 try (NameLocker locker = new NameLocker(connection, "lock-name", 10)) {
