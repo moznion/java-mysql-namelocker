@@ -195,6 +195,8 @@ public class NameLockerTest {
       } catch (Exception e) {
         fail();
       }
+    } catch (SQLException sqle) {
+      assumeTrue("MySQL may not be upped", false);
     }
   }
 }
