@@ -3,7 +3,7 @@ package net.moznion.mysql.namelocker;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assume.assumeTrue;
-import net.moznion.mysql.namelocker.NameLocker;
+
 import net.moznion.mysql.namelocker.exception.AlreadyLockedException;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -21,16 +21,21 @@ import java.sql.Statement;
 public class NameLockerTest {
   private static String dbName;
 
+  /**
+   * Globally setup.
+   */
   @BeforeClass
   public static void initial() {
-    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost", "root", "")) {
+    try (Connection connection =
+        DriverManager.getConnection("jdbc:mysql://localhost", "root", "")) {
       while (true) {
         dbName = "test_name_locker_" + RandomStringUtils.randomAlphanumeric(16);
 
         // check has DB already existed or not?
         try (PreparedStatement sth =
-            connection
-                .prepareStatement("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?")) {
+            connection.prepareStatement(
+                "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?"
+                )) {
           sth.setString(1, dbName);
           ResultSet resultSet = sth.executeQuery();
           resultSet.next();
@@ -65,9 +70,13 @@ public class NameLockerTest {
     }
   }
 
+  /**
+   * Globally tear down.
+   */
   @AfterClass
   public static void terminate() {
-    try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost", "root", "")) {
+    try (Connection connection =
+        DriverManager.getConnection("jdbc:mysql://localhost", "root", "")) {
       // drop testing database
       try (Statement stmt = connection.createStatement()) {
         stmt.executeUpdate("DROP DATABASE " + dbName);
@@ -81,7 +90,8 @@ public class NameLockerTest {
   public void shouldGetLockSuccessfully() {
     try (Connection connection =
         DriverManager.getConnection(
-            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                .toString(),
             "root", "")) {
       try (NameLocker locker = new NameLocker(connection, "Lock Star")) {
         // do something
@@ -99,7 +109,8 @@ public class NameLockerTest {
   public void shouldGetLockSuccessfullyWithTimeout() {
     try (Connection connection =
         DriverManager.getConnection(
-            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                .toString(),
             "root", "")) {
       try (NameLocker locker = new NameLocker(connection, "Lock Star", 10)) {
         // do something
@@ -117,11 +128,13 @@ public class NameLockerTest {
   public void shouldBlockLockingSuccessfully() {
     try (Connection conn1 =
         DriverManager.getConnection(
-            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                .toString(),
             "root", "")) {
       try (Connection conn2 =
           DriverManager.getConnection(
-              new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+              new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                  .toString(),
               "root", "")) {
         try (NameLocker locker1 = new NameLocker(conn1, "Lock Star")) {
           try (NameLocker locker2 = new NameLocker(conn2, "Lock Star")) {
@@ -146,11 +159,13 @@ public class NameLockerTest {
   public void shouldReleaseResourceSuccessfully() {
     try (Connection conn1 =
         DriverManager.getConnection(
-            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                .toString(),
             "root", "")) {
       try (Connection conn2 =
           DriverManager.getConnection(
-              new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+              new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                  .toString(),
               "root", "")) {
         try (NameLocker locker1 = new NameLocker(conn1, "Lock Star")) {
           // do something
@@ -185,7 +200,8 @@ public class NameLockerTest {
 
     try (Connection conn =
         DriverManager.getConnection(
-            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+            new StringBuilder().append("jdbc:mysql://localhost/").append(dbName)
+                .toString(),
             "root", "")) {
       try (NameLocker locker = new NameLocker(conn, null)) {
         // do something
