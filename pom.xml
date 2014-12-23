@@ -3,7 +3,7 @@
 
 	<groupId>net.moznion</groupId>
 	<artifactId>mysql-namelocker</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>mysql-namelocker</name>
@@ -144,7 +144,7 @@
 		<url>https://github.com/moznion/java-mysql-namelocker</url>
 		<connection>scm:git:git@github.com:moznion/java-mysql-namelocker.git</connection>
 		<developerConnection>scm:git:git@github.com:moznion/java-mysql-namelocker.git</developerConnection>
-		<tag>mysql-namelocker-1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<licenses>
