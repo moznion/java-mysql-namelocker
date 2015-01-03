@@ -215,4 +215,29 @@ public class NameLockerTest {
       assumeTrue("MySQL may not be upped", false);
     }
   }
+
+  @Test
+  public void shouldReleaseLockTogetherWithConnectionClosing() {
+    try (Connection conn1 = DriverManager.getConnection(
+        new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+        "root", "")) {
+      try (Connection conn2 = DriverManager.getConnection(
+          new StringBuilder().append("jdbc:mysql://localhost/").append(dbName).toString(),
+          "root", "")) {
+        try (NameLocker locker1 = new NameLocker(conn1, "Lock Star")) {
+          conn1.close();
+          try (NameLocker locker2 = new NameLocker(conn2, "Lock Star")) {
+            // do something
+          }
+        }
+      }
+    } catch (SQLException sqle) {
+      assumeTrue("MySQL may not be upped", false);
+      return;
+    } catch (Exception e) {
+      fail("Catch unexpected exception");
+    }
+
+    assertTrue("Release resource successfully", true);
+  }
 }
