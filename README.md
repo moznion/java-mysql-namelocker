@@ -1,4 +1,4 @@
-mysql-namelocker [![Build Status](https://travis-ci.org/moznion/java-mysql-namelocker.svg)](https://travis-ci.org/moznion/java-mysql-namelocker)
+mysql-namelocker [![Build Status](https://travis-ci.org/moznion/java-mysql-namelocker.svg)](https://travis-ci.org/moznion/java-mysql-namelocker) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.moznion/mysql-namelocker/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.moznion/mysql-namelocker)
 ==
 
 Provides the safe way of locking and unlocking MySQL tables using named locks for Java 7 or later.
